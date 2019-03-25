@@ -1,0 +1,142 @@
+{
+  "targets": [
+    {
+      "isStage": true,
+      "name": "Stage",
+      "variables": { "`jEk@4|i[#Fk?(8x)AV.-my variable": ["我的变量", 0] },
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {},
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "assetId": "cd21514d0531fdffb22204e0ec5ed84a",
+          "name": "背景1",
+          "bitmapResolution": 1,
+          "md5ext": "cd21514d0531fdffb22204e0ec5ed84a.svg",
+          "dataFormat": "svg",
+          "rotationCenterX": 1,
+          "rotationCenterY": 1
+        }
+      ],
+      "sounds": [
+        {
+          "assetId": "83a9787d4cb6f3b7632b4ddfebf74367",
+          "name": "啵",
+          "dataFormat": "wav",
+          "format": "",
+          "rate": 48000,
+          "sampleCount": 1123,
+          "md5ext": "83a9787d4cb6f3b7632b4ddfebf74367.wav"
+        }
+      ],
+      "volume": 100,
+      "layerOrder": 0,
+      "tempo": 60,
+      "videoTransparency": 50,
+      "videoState": "off",
+      "textToSpeechLanguage": null
+    },
+    {
+      "isStage": false,
+      "name": "角色1",
+      "variables": {},
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {},
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "assetId": "e6b90f61e8c1e9a3cddd9aaab9e90ebe",
+          "name": "造型1",
+          "bitmapResolution": 2,
+          "md5ext": "e6b90f61e8c1e9a3cddd9aaab9e90ebe.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "79d2c4614c2f5b51444e771a88f91907",
+          "name": "造型2",
+          "bitmapResolution": 2,
+          "md5ext": "79d2c4614c2f5b51444e771a88f91907.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "926cf51490a9342b0000cf3fc0b728b4",
+          "name": "造型3",
+          "bitmapResolution": 2,
+          "md5ext": "926cf51490a9342b0000cf3fc0b728b4.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "0d1717253c78571fa79fbda930b3ef13",
+          "name": "造型4",
+          "bitmapResolution": 2,
+          "md5ext": "0d1717253c78571fa79fbda930b3ef13.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "b254724d6764684c021c44a9be9850d7",
+          "name": "造型5",
+          "bitmapResolution": 2,
+          "md5ext": "b254724d6764684c021c44a9be9850d7.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "2b8d5bab05dd06a326ab272cd31b91b1",
+          "name": "造型6",
+          "bitmapResolution": 2,
+          "md5ext": "2b8d5bab05dd06a326ab272cd31b91b1.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "9c1bf72af3ae8489b8369cc4ce660c4c",
+          "name": "造型7",
+          "bitmapResolution": 2,
+          "md5ext": "9c1bf72af3ae8489b8369cc4ce660c4c.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        },
+        {
+          "assetId": "33910ab40a14d2ccf900bdede21f6ddf",
+          "name": "造型8",
+          "bitmapResolution": 2,
+          "md5ext": "33910ab40a14d2ccf900bdede21f6ddf.png",
+          "dataFormat": "png",
+          "rotationCenterX": 257.5,
+          "rotationCenterY": 280
+        }
+      ],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "size": 100,
+      "direction": 90,
+      "draggable": false,
+      "rotationStyle": "all around"
+    }
+  ],
+  "extensions": [],
+  "meta": {
+    "semver": "3.0.0",
+    "vm": "0.2.0-prerelease.20181101222423",
+    "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36"
+  }
+}

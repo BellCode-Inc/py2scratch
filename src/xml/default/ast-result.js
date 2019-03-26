@@ -1,9 +1,6 @@
 const filbert = require("filbert")
 
 let ast = `
-from time import sleep
-from scratch import nextCostumes
-
 def onStart():
   while(True):
      nextCostumes()

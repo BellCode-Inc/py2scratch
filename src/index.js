@@ -2,6 +2,7 @@ const fs = require("fs")
 const parser = require("xml2json")
 const util = require("util")
 const { createProgramObject, convertBlockToAst } = require("./ast-creator")
+const codeGenerator = require("./code-generator")
 // const prettier = require("prettier")
 
 const xmlString = parser.toJson(
@@ -16,4 +17,6 @@ const ast = (blocks.length ? blocks : [blocks]).map(convertBlockToAst)
 
 const program = createProgramObject(ast)
 
-console.log(util.inspect(program, { showHidden: false, depth: null }))
+const pythonCode = codeGenerator(program)
+
+console.log(pythonCode)

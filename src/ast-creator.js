@@ -56,13 +56,21 @@ const createFunctionDefinition = (functionName, params = [], body) => ({
 const convertBlockToAst = ({ type, next, value, statement }) => {
   switch (type) {
     case "control_forever":
+      const body = []
+      let nextBlock = statement.block
+
+      while (nextBlock) {
+        body.push(convertBlockToAst(statement.block))
+        nextBlock = nextBlock.next
+      }
+
       return createWhile(
         {
           type: "Literal",
           value: true,
           raw: "True"
         },
-        statement && convertBlockToAst(statement.block)
+        body
       )
     case "event_whenflagclicked":
       return createFunctionDefinition(
@@ -71,11 +79,7 @@ const convertBlockToAst = ({ type, next, value, statement }) => {
         next && convertBlockToAst(next.block)
       )
     case "looks_nextcostume":
-      return createFunctionCall(
-        "nextCostumes",
-        [],
-        next && convertBlockToAst(next.block)
-      )
+      return createFunctionCall("nextCostumes", [])
 
     case "control_wait":
       const {

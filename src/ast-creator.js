@@ -5,7 +5,7 @@ const createWhile = (test, stateMents) => ({
   test,
   body: {
     type: "BlockStatement",
-    body: [stateMents]
+    body: stateMents
   }
 })
 
@@ -60,8 +60,8 @@ const convertBlockToAst = ({ type, next, value, statement }) => {
       let nextBlock = statement.block
 
       while (nextBlock) {
-        body.push(convertBlockToAst(statement.block))
-        nextBlock = nextBlock.next
+        body.push({ ...nextBlock, next: null })
+        nextBlock = nextBlock.next && nextBlock.next.block
       }
 
       return createWhile(
@@ -70,7 +70,7 @@ const convertBlockToAst = ({ type, next, value, statement }) => {
           value: true,
           raw: "True"
         },
-        body
+        body.map(convertBlockToAst)
       )
     case "event_whenflagclicked":
       return createFunctionDefinition(

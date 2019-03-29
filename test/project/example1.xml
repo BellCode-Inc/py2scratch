@@ -1,0 +1,24 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+    <variables>
+        <variable type="" id="x3ZgZg%dl9N3dN2ZXtvS" islocal="false">我的变量</variable>
+    </variables>
+    <block type="event_whenflagclicked" id="!`ySJNZD0`-kW??gnFu(" x="373" y="248">
+        <next>
+            <block type="control_forever" id="G#OUB(}h/M|x7W,zv,4C">
+                <statement name="SUBSTACK">
+                    <block type="looks_nextcostume" id="kLZb)M~QR)JX]3?4m_(Y">
+                        <next>
+                            <block type="control_wait" id="$|Qx7,=9nh%xnJAL:)gM">
+                                <value name="DURATION">
+                                    <shadow type="math_positive_number" id="_{k;7k0dg5VkH*.LR%s%">
+                                        <field name="NUM">0.1</field>
+                                    </shadow>
+                                </value>
+                            </block>
+                        </next>
+                    </block>
+                </statement>
+            </block>
+        </next>
+    </block>
+</xml>

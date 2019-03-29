@@ -1,10 +1,8 @@
 const xml2json = require("xml2json")
-const {
-  nameMappingBlock
-} = require('./map')
+const { nameMappingBlock } = require("./map")
 
-const GreenFlag = 'onStart'
-const astNodeTypeMatch = (ast) => {
+const GreenFlag = "onStart"
+const astNodeTypeMatch = ast => {
   switch (ast.type) {
     case "FunctionDeclaration":
       const params = ast.params
@@ -23,24 +21,24 @@ const astNodeTypeMatch = (ast) => {
       let obj = {}
       let sub = obj
       ast.body.forEach(element => {
-        if (sub.hasOwnProperty('type')) {
+        if (sub.hasOwnProperty("type")) {
           sub.next = {}
           sub = sub.next
         }
         sub.block = astNodeTypeMatch(element)
         sub = sub.block
-      });
-      return obj;
+      })
+      return obj
     case "WhileStatement":
       if (ast.test.value !== true) {
         throw new Error("just while(true) can match")
       } else {
         const result = {
-          "type": "control_forever",
+          type: "control_forever"
         }
         if (ast.body.body.length > 0) {
           result.statement = astNodeTypeMatch(ast.body)
-          result.statement.name = 'SUBSTACK'
+          result.statement.name = "SUBSTACK"
         }
         return result
       }
@@ -49,10 +47,10 @@ const astNodeTypeMatch = (ast) => {
       return astNodeTypeMatch(ast.expression)
 
     case "CallExpression":
-      if(ast.callee.hasOwnProperty("name")){
-      return nameMappingBlock(ast.callee.name, ast.arguments)
-      }else{
-        return nameMappingBlock(ast.callee.property.name,ast.arguments)
+      if (ast.callee.hasOwnProperty("name")) {
+        return nameMappingBlock(ast.callee.name, ast.arguments)
+      } else {
+        return nameMappingBlock(ast.callee.property.name, ast.arguments)
       }
 
     case "Identifier":
@@ -62,15 +60,15 @@ const astNodeTypeMatch = (ast) => {
   }
 }
 
-const getBlock = (ast) => {
+const getBlock = ast => {
   const temp = {
-    "xml": {
-      "xmlns": "http://www.w3.org/1999/xhtml",
-      "variables": {
-        "variable": {
-          "type": "",
-          "islocal": "false",
-          "$t": "我的变量"
+    xml: {
+      xmlns: "http://www.w3.org/1999/xhtml",
+      variables: {
+        variable: {
+          type: "",
+          islocal: "false",
+          $t: "我的变量"
         }
       }
     }
@@ -79,9 +77,8 @@ const getBlock = (ast) => {
   return temp
 }
 
-module.exports = {
-  getBlock
-}
+module.exports = getBlock
+
 /* example
  ** const {
  **   astResult
@@ -91,7 +88,6 @@ module.exports = {
  **   depth: null
  ** })
  */
-
 
 /*  Blockly 调用
 const Blockly = require("scratch-block")

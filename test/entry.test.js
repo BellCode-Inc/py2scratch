@@ -1,18 +1,35 @@
-const {readFileSync} = require("fs-extra")
-const {resolve} = require("path")
-const {
-  getBlock
-} = require("../src/convert-block")
+const { readFileSync } = require("fs-extra")
+const { resolve } = require("path")
+const { astToBlockJson, astToPy, blockJsonToAst } = require("../src/index")
 const xml2json = require("xml2json")
 const filbert = require("filbert")
-const getXmlStr = (ast)=>xml2json.toXml(getBlock(ast))
-const cleanXml = (str)=>str.replace(/id=[^\s]+"/g,'').replace(/[xy]="\d+"/g,"").replace(/\s{2}/g,"").replace(/\n/g,"").replace(/\s/g,"")
 
-test('project 1',()=>{
-  const oXml=readFileSync(resolve(__dirname,'./project/example1.xml'),{encoding:"utf-8"})
-  const pystr=readFileSync(resolve(__dirname,'./project/example1.py'),{encoding:"utf-8"})
-  const ast = filbert.parse(pystr)
-  const str = cleanXml(oXml)
-  //TODO:不知道怎么比较，先全专程字符串比
-  expect(getXmlStr(ast).replace(/\s/g,'')).toBe(str)
+const getXmlStr = ast => xml2json.toXml(astToBlockJson(ast))
+const cleanXml = str =>
+  str
+    .replace(/id=[^\s]+"/g, "")
+    .replace(/[xy]="\d+"/g, "")
+    .replace(/\s{2}/g, "")
+    .replace(/\n/g, "")
+    .replace(/\s/g, "")
+
+test("project 1", () => {
+  const originXml = readFileSync(
+    resolve(__dirname, "./project1/example1.xml"),
+    {
+      encoding: "utf-8"
+    }
+  )
+  const pystr = readFileSync(resolve(__dirname, "./project1/example1.py"), {
+    encoding: "utf-8"
+  })
+  const targetAst = filbert.parse(pystr)
+  const clearXml = cleanXml(originXml)
+  const clearBlockJson = JSON.parse(xml2json.toJson(originXml))
+
+  // block json 能够正确的转换为预期的 python 代码实现
+  expect(astToPy(blockJsonToAst(clearBlockJson))).toBe(pystr)
+
+  // 从 python 代码实现转换回 block xml 与 origin xml 相匹配
+  expect(getXmlStr(targetAst).replace(/\s/g, "")).toBe(clearXml)
 })

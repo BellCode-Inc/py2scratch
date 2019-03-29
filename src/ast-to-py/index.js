@@ -21,7 +21,7 @@ const codeGenerator = ast => {
     case "ExpressionStatement":
       return codeGenerator(ast.expression) + "\n"
     case "Literal":
-      return ast.value
+      return ast.raw
     case "FunctionDeclaration":
       currentIndent += 1
       const {
@@ -35,9 +35,13 @@ const codeGenerator = ast => {
       return functionDeclaration
     case "CallExpression":
       const {
-        callee: { name }
+        callee: { name },
+        arguments: args
       } = ast
-      return `${name}()`
+      return args.length
+        ? `${name}(${args.map(arg => arg.value)[0]})`
+        : `${name}()`
+
     case "WhileStatement":
       const { test } = ast
       currentIndent += 1

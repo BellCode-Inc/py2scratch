@@ -1,14 +1,5 @@
 let entryIndex = 0
 
-const createWhile = (test, stateMents) => ({
-  type: "WhileStatement",
-  test,
-  body: {
-    type: "BlockStatement",
-    body: stateMents
-  }
-})
-
 const createProgramObject = ast => {
   new Array(entryIndex).fill(1).forEach((_, index) => {
     ast.push(createFunctionCall(`onStart${++index}`))
@@ -22,11 +13,20 @@ const createProgramObject = ast => {
   }
 }
 
-const createFunctionCall = (calleeName, arguments = []) => ({
+const createWhile = (test, stateMents) => ({
+  type: "WhileStatement",
+  test,
+  body: {
+    type: "BlockStatement",
+    body: stateMents
+  }
+})
+
+const createFunctionCall = (calleeName, funcArguments = []) => ({
   type: "ExpressionStatement",
   expression: {
     type: "CallExpression",
-    arguments,
+    arguments: funcArguments,
     callee: {
       type: "Identifier",
       name: calleeName
@@ -91,7 +91,9 @@ const convertBlockToAst = ({ type, next, value, statement }) => {
   }
 }
 
-module.exports = {
-  convertBlockToAst,
-  createProgramObject
+const astCreator = ({ xml: { block: blocks } }) => {
+  const ast = (blocks.length ? blocks : [blocks]).map(convertBlockToAst)
+  return createProgramObject(ast)
 }
+
+module.exports = astCreator

@@ -1,4 +1,3 @@
-const xml2json = require("xml2json")
 const { nameMappingBlock } = require("./map")
 
 const GreenFlag = "onStart"

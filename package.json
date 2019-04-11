@@ -1,6 +1,6 @@
 {
   "name": "py-to-scratch",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -11,13 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "filbert": "^0.1.20",
-    "lodash": "^4.17.11",
-    "xml2json": "^0.11.2"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "fs-extra": "^7.0.1",
     "jest": "^24.5.0",
-    "prettier": "1.16.4"
+    "prettier": "1.16.4",
+    "xml2json": "^0.11.2"
   },
   "prettier": {
     "semi": false

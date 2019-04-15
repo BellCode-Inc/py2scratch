@@ -16,8 +16,7 @@
   "devDependencies": {
     "fs-extra": "^7.0.1",
     "jest": "^24.5.0",
-    "prettier": "1.16.4",
-    "xml2json": "^0.11.2"
+    "prettier": "1.16.4"
   },
   "prettier": {
     "semi": false

@@ -1,10 +1,13 @@
 const { readFileSync } = require("fs-extra")
 const { resolve } = require("path")
 const { astToBlockJson, astToPy, blockJsonToAst } = require("../src/index")
-const xml2json = require("xml2json")
 const filbert = require("filbert")
 
-const getXmlStr = ast => xml2json.toXml(astToBlockJson(ast))
+const xml2json = require("../src/xml-to-json/index")
+
+const json2xml = require("../src/json-to-xml/index")
+
+const getXmlStr = ast => json2xml(astToBlockJson(ast))
 const cleanXml = str =>
   str
     .replace(/id=[^\s]+"/g, "")
@@ -25,7 +28,7 @@ test("project 1", () => {
   })
   const targetAst = filbert.parse(pystr)
   const clearXml = cleanXml(originXml)
-  const clearBlockJson = JSON.parse(xml2json.toJson(originXml))
+  const clearBlockJson = JSON.parse(xml2json(originXml))
 
   // block json 能够正确的转换为预期的 python 代码实现
   expect(astToPy(blockJsonToAst(clearBlockJson))).toBe(pystr)

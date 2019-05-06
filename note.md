@@ -60,7 +60,7 @@ ps `onstart{index}`
 
 # 缺陷
 
-- 很多`scratch-block`的代码块无法简答的通过`python`代码表达
+- 很多`scratch-block`的代码块无法简单的通过`python`代码表达
 - `python` 代码脱离我们的环境，在真正的 py 环境中是无法使用的
 - 现在的`parser`不够完备，缺少部分`Keywords` `Built-ins`
 
@@ -77,3 +77,10 @@ ps `onstart{index}`
   * block json 能够正确的转换为预期的 python 代码实现。
   * 从 python 代码实现转换回 block xml，除去部分 scratch 可以重新生成的 id 之类属性，应该完全匹配。
 
+# 需要着重处理的block
+
+* 帽子代码块（主要在事件类别，控制类别），观察者模式
+* 控制类代码块，例如重复代码块、如果那么etc
+* 侦测代码块的代表的condition
+* 运算代码块与python原生计算的映射
+* 变量代码块如何工作

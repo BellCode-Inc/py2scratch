@@ -15,6 +15,7 @@ const cleanXml = str =>
     .replace(/\s{2}/g, "")
     .replace(/\n/g, "")
     .replace(/\s/g, "")
+    .replace(/\<variables\>.*\<\/variables\>/,'')
 
 test("project 1", () => {
   const originXml = readFileSync(

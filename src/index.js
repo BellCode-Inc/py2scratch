@@ -1,4 +1,4 @@
-const astToBlockJson = require("./ast-to-block-json")
+const {getBlock:astToBlockJson,getXmlresult} = require("./ast-to-block-json")
 const astToPy = require("./ast-to-py")
 const blockJsonToAst = require("./block-json-to-ast")
 const xmlToJson = require("./xml-to-json")

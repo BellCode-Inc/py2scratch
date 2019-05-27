@@ -11,5 +11,6 @@ module.exports = {
   blockJsonToAst,
   xmlToJson,
   jsonToXml,
-  parsePyToAst: parse
+  parsePyToAst: parse,
+  getXmlresult
 }

@@ -8,3 +8,6 @@ demo
 note.md
 reference.md
 tips.md
+.editorconfig
+*.md
+*.py

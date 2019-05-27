@@ -30,8 +30,13 @@ const blockGenerator = ({
   if(opeator){
     result.field = opeator
   }
+
   if (arg.length === 0) {
     return result
+  }
+
+  if(valueTem === undefined){
+    throw "此函数调用无需传参"
   }
 
   arg.forEach((element, index) => {
@@ -42,7 +47,9 @@ const blockGenerator = ({
         let obj = valueGenerator(valueTem[index])
         if (element.type === 'Literal') {
           obj.shadow.field.$t = element.value
-        } else {
+        } else if(element.type === 'UnaryExpression'){
+          obj.shadow.field.$t = Number((element.operator==='-'?'-':"")+ element.value)
+        }else {
           obj.block = element.value
         }
         result.value.push(obj)

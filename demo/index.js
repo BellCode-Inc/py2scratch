@@ -1,9 +1,8 @@
 const filbert = require("filbert")
 
 const result = filbert.parse((`
-i = [1,2,3]
-say(i[0])
-`).replace(/\[([0-9]+)\]/g,"[$1+1]"))
+while(True):
+`).replace(/\[([0-9]+)\]/g,"[$1+1]"),{locations:true,ranges:true})
 
 
 console.dir(result,{depth:null})

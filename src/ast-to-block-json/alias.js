@@ -30,6 +30,17 @@ const alias = {
   forward:"motion_movesteps",
   right:"motion_turnright",
   left:"motion_turnleft",
+  setheading:"motion_pointindirection",
+  goto:"motion_gotoxy",
+  rebound:"motion_ifonedgebounce",
+
+
+
+  //画笔
+  stamp:"pen_stamp",
+  clear:"pen_clear",
+  penup:"pen_penUp",
+  pendown:"pen_penDown",
 
   //subscriptIndex
   subscriptIndex:"data_itemoflist"

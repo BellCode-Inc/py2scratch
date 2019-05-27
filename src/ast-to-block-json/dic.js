@@ -1,16 +1,6 @@
-const {alias} = require('./alias')
-/**
- * block type 字典
- *
- *
- */
-const blocks = {
-  data_itemoflist:["data_itemoflist",[{
-    name:"INDEX",
-    shadowName:"NUM",
-    shadowType: "math_integer",
-    defaultValue:"1",
-  }]],
+const { alias } = require("./alias")
+
+const originBlocks = {
   motion_movesteps: [
     "motion_movesteps",
     [
@@ -455,8 +445,8 @@ const blocks = {
     ]
   ],
   control_forever: ["control_forever"],
-  control_if: ["control_if",[{name:"CONDITION"}]],
-  control_if_else: ["control_if_else",[{name:"CONDITION"}]],
+  control_if: ["control_if"],
+  control_if_else: ["control_if_else"],
   control_wait_until: ["control_wait_until"],
   control_repeat_until: ["control_repeat_until"],
   control_stop: ["control_stop"],
@@ -491,7 +481,7 @@ const blocks = {
         name: "COLOR",
         shadowName: "COLOUR",
         shadowType: "colour_picker",
-        defaultValue: "#7fcd04"
+        defaultValue: "#e24421"
       }
     ]
   ],
@@ -502,13 +492,13 @@ const blocks = {
         name: "COLOR",
         shadowName: "COLOUR",
         shadowType: "colour_picker",
-        defaultValue: "#f51fb9"
+        defaultValue: "#a28852"
       },
       {
         name: "COLOR2",
         shadowName: "COLOUR",
         shadowType: "colour_picker",
-        defaultValue: "#b2419b"
+        defaultValue: "#bdf8ab"
       }
     ]
   ],
@@ -831,7 +821,178 @@ const blocks = {
     ]
   ],
   data_showvariable: ["data_showvariable"],
-  data_hidevariable: ["data_hidevariable"]
+  data_hidevariable: ["data_hidevariable"],
+  pen_clear: ["pen_clear"],
+  pen_stamp: ["pen_stamp"],
+  pen_penDown: ["pen_penDown"],
+  pen_penUp: ["pen_penUp"],
+  pen_setPenColorToColor: [
+    "pen_setPenColorToColor",
+    [
+      {
+        name: "COLOR",
+        shadowName: "COLOUR",
+        shadowType: "colour_picker",
+        defaultValue: "#d02626"
+      }
+    ]
+  ],
+  pen_changePenColorParamBy: [
+    "pen_changePenColorParamBy",
+    [
+      {
+        name: "COLOR_PARAM",
+        shadowName: "colorParam",
+        shadowType: "pen_menu_colorParam",
+        defaultValue: "color"
+      },
+      {
+        name: "VALUE",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "10"
+      }
+    ]
+  ],
+  pen_setPenColorParamTo: [
+    "pen_setPenColorParamTo",
+    [
+      {
+        name: "COLOR_PARAM",
+        shadowName: "colorParam",
+        shadowType: "pen_menu_colorParam",
+        defaultValue: "color"
+      },
+      {
+        name: "VALUE",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "50"
+      }
+    ]
+  ],
+  pen_changePenSizeBy: [
+    "pen_changePenSizeBy",
+    [
+      {
+        name: "SIZE",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "1"
+      }
+    ]
+  ],
+  pen_setPenSizeTo: [
+    "pen_setPenSizeTo",
+    [
+      {
+        name: "SIZE",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "1"
+      }
+    ]
+  ],
+  music_playDrumForBeats: [
+    "music_playDrumForBeats",
+    [
+      {
+        name: "DRUM",
+        shadowName: "DRUM",
+        shadowType: "music_menu_DRUM",
+        defaultValue: "1"
+      },
+      {
+        name: "BEATS",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "0.25"
+      }
+    ]
+  ],
+  music_restForBeats: [
+    "music_restForBeats",
+    [
+      {
+        name: "BEATS",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "0.25"
+      }
+    ]
+  ],
+  music_playNoteForBeats: [
+    "music_playNoteForBeats",
+    [
+      {
+        name: "NOTE",
+        shadowName: "NOTE",
+        shadowType: "note",
+        defaultValue: "60"
+      },
+      {
+        name: "BEATS",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "0.25"
+      }
+    ]
+  ],
+  music_setInstrument: [
+    "music_setInstrument",
+    [
+      {
+        name: "INSTRUMENT",
+        shadowName: "INSTRUMENT",
+        shadowType: "music_menu_INSTRUMENT",
+        defaultValue: "1"
+      }
+    ]
+  ],
+  music_setTempo: [
+    "music_setTempo",
+    [
+      {
+        name: "TEMPO",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "60"
+      }
+    ]
+  ],
+  music_changeTempo: [
+    "music_changeTempo",
+    [
+      {
+        name: "TEMPO",
+        shadowName: "NUM",
+        shadowType: "math_number",
+        defaultValue: "20"
+      }
+    ]
+  ],
+  music_getTempo: ["music_getTempo"]
+}
+/**
+ * block type 字典
+ *
+ *
+ */
+const blocks = {
+  ...originBlocks,
+  data_itemoflist: [
+    "data_itemoflist",
+    [
+      {
+        name: "INDEX",
+        shadowName: "NUM",
+        shadowType: "math_integer",
+        defaultValue: "1"
+      }
+    ]
+  ],
+  control_if: ["control_if", [{ name: "CONDITION" }]],
+  control_if_else: ["control_if_else", [{ name: "CONDITION" }]]
 }
 
 /**
@@ -863,7 +1024,7 @@ const map = {
   switchcostumeto: "looks_switchcostumeto",
   nextcostume: "looks_nextcostume",
   //alias nextCostumes
-  nextCostumes:"looks_nextcostume",
+  nextCostumes: "looks_nextcostume",
   switchbackdropto: "looks_switchbackdropto",
   nextbackdrop: "looks_nextbackdrop",
   changesizeby: "looks_changesizeby",
@@ -897,7 +1058,7 @@ const map = {
   broadcastandwait: "event_broadcastandwait",
   wait: "control_wait",
   //alias sleep
-  sleep:"control_wait",
+  sleep: "control_wait",
   repeat: "control_repeat",
   forever: "control_forever",
   if: "control_if",
@@ -939,11 +1100,11 @@ const map = {
   /**alias + - * / */
 
   gt: "operator_gt",
-  ">":"operator_gt",
+  ">": "operator_gt",
   lt: "operator_lt",
-  "<":"operator_lt",
+  "<": "operator_lt",
   /**alias + - * / */
-  "==":"operator_equals",
+  "==": "operator_equals",
   equals: "operator_equals",
   and: "operator_and",
   or: "operator_or",
@@ -954,22 +1115,22 @@ const map = {
   contains: "operator_contains",
   mod: "operator_mod",
   //alias %
-  "%":"operator_mod",
+  "%": "operator_mod",
   round: "operator_round",
   mathop: "operator_mathop",
   //alias 绝对值相关的方法
-  abs:"operator_mathop",
-  floor:"operator_mathop",
-  ceiling:"operator_mathop",
-  sqrt:"operator_mathop",
-  sin:"operator_mathop",
-  cos:"operator_mathop",
-  tan:"operator_mathop",
-  asin:"operator_mathop",
-  acos:"operator_mathop",
-  atan:"operator_mathop",
-  in:"operator_mathop",
-  log:"operator_mathop",
+  abs: "operator_mathop",
+  floor: "operator_mathop",
+  ceiling: "operator_mathop",
+  sqrt: "operator_mathop",
+  sin: "operator_mathop",
+  cos: "operator_mathop",
+  tan: "operator_mathop",
+  asin: "operator_mathop",
+  acos: "operator_mathop",
+  atan: "operator_mathop",
+  in: "operator_mathop",
+  log: "operator_mathop",
   variable: "data_variable",
   setvariableto: "data_setvariableto",
   changevariableby: "data_changevariableby",

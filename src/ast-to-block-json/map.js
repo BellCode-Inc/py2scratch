@@ -1,5 +1,6 @@
 const { blocks, map } = require("./dic")
 const {blockGenerator} = require("./generaotr")
+const {errorGenerator} =require('./../helper/index')
 const otherOpeator = {
 
   operator_mathop:(opcode,name)=>({
@@ -17,9 +18,17 @@ const otherOpeator = {
   return result
 }
 }
+const sameAlias = {
+  say :[map.say,map.say,map.sayforsecs]
+}
 const nameMappingBlock = (key, arg=[]) => {
+
   if (map.hasOwnProperty(key)) {
-    let blockTem = blocks[map[key]]
+    let opcodeMap = map[key]
+    if(sameAlias.hasOwnProperty(key)){
+      opcodeMap = sameAlias[key][arg.length]
+    }
+    let blockTem = blocks[opcodeMap]
     let opcode = blockTem[0]
     let valueTem = blockTem[1]
     let opeator = otherOpeator[opcode]&&otherOpeator[opcode](opcode,key,arg)
@@ -29,7 +38,7 @@ const nameMappingBlock = (key, arg=[]) => {
     }
     return blockGenerator({ opcode, valueTem, arg:args,opeator })
   }else {
-    console.error(`dic中暂无与${key}匹配的项`)
+    throw errorGenerator({},`${key} is not define;${key} 未定义，请检查输入`)
   }
 }
 

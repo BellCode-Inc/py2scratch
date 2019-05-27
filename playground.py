@@ -10,4 +10,6 @@ def onStart():
 
 onStart()
 
+while(True):
+print('1111')
 

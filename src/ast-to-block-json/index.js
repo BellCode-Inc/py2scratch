@@ -11,17 +11,20 @@ const {
   appendList,
   getListLen
 } = require('./generaotr')
+const {errorGenerator} = require("./../helper/index")
 const {btoa} = require("abab")
 const hasOwnProperty =(name,property)=> Object.prototype.hasOwnProperty.call(name,property)
 const pythonRuntime="__pythonRuntime"
 const BinaryOperator = ['%',"-","/",">","<","=="]
 const OtherOperator = ['add',"multiply"]
-const UnaryOperator = ["!"]
+const UnaryOperator = ["!",'+','-']
 const LogicalOperator = ["||","&&"]
 
 const IfStatement = "IfStatement"
 const VariableDeclaration = "VariableDeclaration"
 const FunctionDeclaration = "FunctionDeclaration"
+const ForStatement = "ForStatement"
+const ForInStatement = "ForInStatement"
 /**
  * while 表达式
  */
@@ -68,7 +71,7 @@ const FunctionDeclarationPre = ["__realArgCount","__params","__hasParams"]
 let variableList = Object.create(null) //变量列表
 let functionList = [] //函数列表
 //TODO:区分函数作用域
-let currentFunction = ''
+// let currentFunction = ''
 const astNodeTypeMatch = ast => {
   switch (ast.type) {
 
@@ -83,24 +86,51 @@ const astNodeTypeMatch = ast => {
         functionList.arg = []
 
       }
+      const realBody = ast.body.body.filter((item)=>{
+        if(item.userCode ===false && item.type === VariableDeclaration&&FunctionDeclarationPre.some(i=>item.declarations[0].id.name.startsWith(i))){
+          return false
+        }
+        if( item.type === IfStatement && item.test.left.name.startsWith(FunctionDeclarationPre[0])){
+          return false
+        }
+        return true
+      })
+      if(realBody.length<1){
+        throw errorGenerator(ast.body,"Expected indented block;需要缩进")
+      }
       if(ast.params.length){
         functionList.arg = ast.params.map(e=>e.name)
-        functionList.obj[name] = astNodeTypeMatch({...ast.body,body:ast.body.body.filter((item)=>{
-          if(item.userCode ===false && item.type === VariableDeclaration&&FunctionDeclarationPre.some(i=>item.declarations[0].id.name.startsWith(i))){
-            return false
-          }
-          if( item.type === IfStatement && item.test.left.name.startsWith(FunctionDeclarationPre[0])){
-            return false
-          }
-          return true
-        })})
+        functionList.obj[name] = astNodeTypeMatch({...ast.body,body:realBody})
       }else{
         functionList.obj[name] = astNodeTypeMatch(ast.body)
       }
       return
     }
-
-    case BlockStatement:
+    //for 循环 ast node 也会以BlockStatement开始
+    case BlockStatement:{
+      //确保是for 循环
+      if(ast.body.length === 2){
+        if((ast.body[0].type === VariableDeclaration && ast.body[0].declarations[0].id.name.startsWith('__filbertRight'))&&(
+          ast.body[1].type === IfStatement && ast.body[1].consequent.body[0].type === ForStatement && ast.body[1].alternate.body[0].type === ForInStatement
+        )){
+          //只能支持 for i in range(x) 这种形式，i 无法在循环体中使用，range只能为一个数字参数
+          const args = ast.body[0].declarations[0].init.arguments
+          if(args.length>1){
+            throw errorGenerator(ast.body[0].declarations[0].init.callee.property,"当前环境for循环只支持range单个参数")
+          }
+          if(args.length === 0){
+            throw errorGenerator(ast.body[0].declarations[0].init.callee.property,"for 循环 range() 内需要填写循环次数")
+          }
+          const ifBody = ast.body[1].alternate.body[0].body
+          if(ifBody.body.length<1){
+            throw errorGenerator(ifBody,"Expected indented block;需要缩进")
+          }
+          result = nameMappingBlock("repeat",[ast.body[0].declarations[0].init.arguments[0]])
+          result.statement= astNodeTypeMatch(ifBody)
+          result.statement.name = "SUBSTACK"
+       return result
+        }
+      }
       let obj = {}
       let sub = obj
       ast.body.forEach(element => {
@@ -112,6 +142,7 @@ const astNodeTypeMatch = ast => {
         sub = sub.block
       })
       return obj
+    }
     /**
      * 尽量使用重复执行代码块去处理 WhileStatement
      *  1. while True -> control_forever,boolean ->true 处理,false 抛出错误
@@ -125,14 +156,16 @@ const astNodeTypeMatch = ast => {
       if(type === Literal){
         if (ast.test.value === true) {
            result = nameMappingBlock('forever')
+           if(ast.body.body.length<1){
+            throw errorGenerator(ast.body,'Expected indented block;需要缩进')
+          }
           if (ast.body.body.length > 0) {
             result.statement= astNodeTypeMatch(ast.body)
             result.statement.name = "SUBSTACK"
           }
           return result
         } else {
-          alert("just while(true) can match")
-          throw new Error("just while(true) can match")
+          throw errorGenerator({},"just while(true) can match;暂时支持while(True)转换")
         }
         /**
          * 2. 变量
@@ -152,6 +185,9 @@ const astNodeTypeMatch = ast => {
     case IfStatement:{
       let result = {}
       if(ast.alternate===null){
+        if(ast.consequent.body.length<1){
+          throw errorGenerator(ast.consequent,'Expected indented block;需要缩进')
+        }
         result = nameMappingBlock('if',[{...ast.test,value:astNodeTypeMatch(ast.test)}])
         result.statement=[{
           name:"SUBSTACK",
@@ -177,8 +213,7 @@ const astNodeTypeMatch = ast => {
         result = nameMappingBlock(ast.operator,[{...ast.left,value:astNodeTypeMatch(ast.left)},{...ast.right,value:astNodeTypeMatch(ast.right)}])
         return result
       }else{
-        alert(`just ${limitOperator.join(`  `)} can match`)
-        throw new Error(`just ${BinaryOperator.join(`  `)} can match`)
+        throw errorGenerator({},`just ${BinaryOperator.join(`  `)} can match`)
       }
     }
     case LogicalExpression:{
@@ -186,8 +221,7 @@ const astNodeTypeMatch = ast => {
         const result = nameMappingBlock(ast.operator,[{...ast.left,value:astNodeTypeMatch(ast.left)},{...ast.right,value:astNodeTypeMatch(ast.right)}])
         return result
       }else{
-        alert(`just ${limitOperator.join(`  `)} can match`)
-        throw new Error(`just ${BinaryOperator.join(`  `)} can match`)
+        throw errorGenerator({},`just ${BinaryOperator.join(`  `)} can match`)
       }
     }
     /**
@@ -196,10 +230,12 @@ const astNodeTypeMatch = ast => {
      */
     case UnaryExpression:{
       if(UnaryOperator.includes(ast.operator)){
+        if(['+','-'].includes(ast.operator)){
+          return ast.argument.value
+        }
         nameMappingBlock('not',[{...ast.argument,value:astNodeTypeMatch(ast.argument)}])
       }else{
-        alert("now UnaryExpression just support not")
-        throw new Error(`now UnaryExpression just support not`)
+        throw errorGenerator({},`now UnaryExpression just support not`)
       }
     }
 
@@ -219,7 +255,7 @@ const astNodeTypeMatch = ast => {
         }
         result = setVariable(name,astNodeTypeMatch(ast.right),astNodeTypeMatch(ast.right))
       }else{
-        throw new Error(`${ast} error`)
+        throw errorGenerator(ast,`${ast} error;${ast} 转换错误，请检查输入`)
       }
       return result
 
@@ -270,31 +306,29 @@ const astNodeTypeMatch = ast => {
       if (ast.callee.hasOwnProperty("name")) {
         let result =null
         try {
-          result = nameMappingBlock(ast.callee.name, ast.arguments.map(item=>({...item,value:astNodeTypeMatch(item)})))
-          if(!result){
-            if(functionList.obj.hasOwnProperty(ast.callee.name)){
+          // if(!result){
+            if(functionList&&functionList.obj&&functionList.obj.hasOwnProperty(ast.callee.name)){
               if(ast.callee.name.startsWith(GreenFlag)){
                 result = nameMappingBlock(GreenFlag)
                 result.next = functionList.obj[ast.callee.name]
               }else{
                 result = useCustomBlock(ast.callee.name,ast.arguments,functionList.arg)
               }
-            }else{
-              alert(`CallExpression cant match ${ast.callee.name}`)
-              throw new Error(`CallExpression cant match ${ast.callee.name}`)
-            }
+            // }else{
+              // throw errorGenerator(ast,`${ast.callee.name} is not define`)
+            // }
+          }else{
+          result = nameMappingBlock(ast.callee.name, ast.arguments.map(item=>({...item,value:astNodeTypeMatch(item)})))
           }
           return result
         } catch (error) {
-          console.error('errorxxxxx',error)
-          return
+          throw errorGenerator(ast,`${error}`)
         }
       } else if(ast.callee.type === MemberExpression){
         //TODO:限制除了 BinaryOtherOperator 以外的python内置方法
         if(ast.callee.object&&ast.callee.object.name === pythonRuntime){
           if(!OtherOperator.includes(ast.callee.property.name)){
-            alert(`now we do not support ${ast.callee.property.name}`)
-            throw new Error(`now we do not support ${ast.callee.property.name}`)
+            throw errorGenerator({},`now we do not support ${ast.callee.property.name}`)
           }
         }
         //list 下表
@@ -312,13 +346,16 @@ const astNodeTypeMatch = ast => {
       let declarations = ast.declarations
       let result = null
       if(declarations.length >1){
-        throw new Error("暂时无法处理该 VariableDeclaration ",ast)
+        throw errorGenerator(ast,"暂时不支持多元赋值")
       }
       const name = declarations[0].id.name
-      const {value,type,callee,arguments: args} = declarations[0].init
+      const {value,type,callee,arguments: args,prefix,argument,operator} = declarations[0].init
 
       if(!hasOwnProperty(variableList,name)){
         variableList[name]={isList:false}
+      }
+      if(type === UnaryExpression &&prefix &&argument.value){
+        result = setVariable(name,Number((operator==='-'?"-":'')+argument.value))
       }
       if(type ===Literal){
         result = setVariable(name,value)
@@ -341,7 +378,7 @@ const astNodeTypeMatch = ast => {
         result = setVariable(name,'',astNodeTypeMatch(declarations[0].init))
       }
       if(!result){
-        throw new Error(`暂不支持解析`,ast)
+        throw errorGenerator(ast,`暂不支持解析`)
       }
       return result
     }
@@ -356,17 +393,17 @@ const astNodeTypeMatch = ast => {
       if(hasOwnProperty(variableList,ast.name)){
         return getVariable(ast.name,variableList[ast.name].isList)
       }
-      throw new Error(`Identifier ${ast.name} cant find in variableList`)
+      throw errorGenerator(ast,`${ast.name} is not define；${ast.name} 未定义`)
     //TODO: 函数、变量
     default:
-      throw new Error(`出现未定义的 ast node type:`,ast)
+      throw errorGenerator(ast,`${ast.name} is not define；${ast.name} 未定义`,)
   }
 }
 
-const getBlock = ast => {
+const getBlock = (ast,autoStart) => {
   variableList=Object.create(null)
   functionList=[]
-  const temp = {
+  let temp = {
     xml: {
       xmlns: "http://www.w3.org/1999/xhtml",
       }
@@ -399,7 +436,12 @@ const getBlock = ast => {
     }
     return [result,result]
   },[temBlock,temBlock])
-  temp.xml.block = temBlock.hasOwnProperty('type')?[temBlock]:[]
+  let start = temBlock
+  if(autoStart){
+    start = nameMappingBlock(GreenFlag)
+    start.next = {block:temBlock}
+  }
+  temp.xml.block = temBlock.hasOwnProperty('type')?[start]:[]
   //插入函数定义  -->>  自定义代码块
   functionList.filter(e=>!e.includes(GreenFlag)).forEach(i=>{
     let result = customBlockGenerator(i,functionList.arg)
@@ -411,33 +453,18 @@ const getBlock = ast => {
   // Object.keys(variableList).forEach(element=>{
   //   temp.xml.variables.variable.push(defVariable(element,element.isList))
   // })
-  console.log("functionList",functionList)
   return temp
 }
 
-const getXmlresult = py =>{
-  const ast = filbert.parse(py.replace(/\[([0-9]+)\]/g,"[$1+1]"))
-  return xml2json(JSON.stringify(getBlock(ast)))
+const getXmlresult = (py,autoStart = true) =>{
+  const ast = filbert.parse(py.replace(/\[([0-9]+)\]/g,"[$1+1]"),{locations:true,ranges:true})
+  return xml2json(JSON.stringify(getBlock(ast,autoStart)))
 }
 module.exports = {getBlock,getXmlresult}
-/***
- *  example
- */
-const str = getXmlresult(`
-i = 0
-if(i == 1):
-  nextCostumes()
-else:
-  if(i >1):
-    nextCostumes()
-  nextCostumes()
-a = round(i)
-b = i % 3
-c = abs(i)
-d *=3
-e +=3
-f = [1,2,3]
-`)
- console.dir(str, {
-     depth: null
-   })
+
+
+// const str = getXmlresult(`
+// say(,1)`)
+//  console.dir(str, {
+//      depth: null
+//    })

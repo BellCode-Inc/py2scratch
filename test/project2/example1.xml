@@ -1,0 +1,39 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+	<variables>
+	</variables>
+	<block type="event_whenflagclicked" id="17}c~msWGp+w/mp@^trD" x="10" y="10">
+		<next>
+			<block type="control_repeat" id="_m2c8B?9Z.x@tAv?N-.y">
+				<value name="TIMES">
+					<shadow type="math_whole_number" id="$5{fe:nfTk{qh6u66:s~">
+						<field name="NUM">
+							9
+						</field>
+					</shadow>
+				</value>
+				<statement name="SUBSTACK">
+					<block type="control_repeat" id="YBMNJqVlG`AAW_]2Y%8*">
+						<value name="TIMES">
+							<shadow type="math_whole_number" id=",Gl89`3aBl#C*eo,PZCH">
+								<field name="NUM">
+									7
+								</field>
+							</shadow>
+						</value>
+						<statement name="SUBSTACK">
+							<block type="looks_say" id="Zhm3)kn)=gljtzX!Ngj2">
+								<value name="MESSAGE">
+									<shadow type="text" id="N^,d(%M`z0x^Kr_p6t@x">
+										<field name="TEXT">
+											nihao
+										</field>
+									</shadow>
+								</value>
+							</block>
+						</statement>
+					</block>
+				</statement>
+			</block>
+		</next>
+	</block>
+</xml>

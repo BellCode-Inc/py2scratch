@@ -125,7 +125,7 @@ const astNodeTypeMatch = ast => {
           if(ifBody.body.length<1){
             throw errorGenerator(ifBody,"Expected indented block;需要缩进")
           }
-          result = nameMappingBlock("repeat",[ast.body[0].declarations[0].init.arguments[0]])
+          let result = nameMappingBlock("repeat",[ast.body[0].declarations[0].init.arguments[0]])
           result.statement= astNodeTypeMatch(ifBody)
           result.statement.name = "SUBSTACK"
        return result
@@ -449,10 +449,7 @@ const getBlock = (ast,autoStart) => {
     result.next= functionList.obj[i]
     temp.xml.block.unshift(result)
   })
-  //插入变量
-  // Object.keys(variableList).forEach(element=>{
-  //   temp.xml.variables.variable.push(defVariable(element,element.isList))
-  // })
+
   return temp
 }
 
@@ -461,10 +458,3 @@ const getXmlresult = (py,autoStart = true) =>{
   return xml2json(JSON.stringify(getBlock(ast,autoStart)))
 }
 module.exports = {getBlock,getXmlresult}
-
-
-// const str = getXmlresult(`
-// say(,1)`)
-//  console.dir(str, {
-//      depth: null
-//    })
